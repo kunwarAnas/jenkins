@@ -1,0 +1,25 @@
+/* groovylint-disable-next-line CompileStatic */
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Building the project..."'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'echo "Running tests..."'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo "Deploying the project..."'
+            }
+        }
+    }
+}
+// This Jenkins pipeline script defines a simple CI/CD process with three stages: Build, Test, and Deploy.

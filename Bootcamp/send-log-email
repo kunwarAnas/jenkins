@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'EMAIL_RECIPIENTS', defaultValue: 'akdnd@gmail.com', description: 'Enter the email')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    sh 'echo "Build started" > build_log.txt'
+                    sh 'echo "Compiling code..." >> build_log.txt'
+                    sh 'sleep 3'
+                    sh 'echo "Build Successful" >> build_log.txt'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                def logs = readFile('build_log.txt')
+                emailext(
+                    subject: "Jenkins Build #${BUILD_NUMBER}",
+                    to: params.EMAIL_RECIPIENTS,
+                    body: "<pre>${logs}</pre>",
+                    mimeType: 'text/html'
+                )
+            }
+        }
+    }
+}

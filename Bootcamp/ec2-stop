@@ -1,0 +1,21 @@
+pipeline {
+    agent { label "jenkins-agent-1" }
+
+    environment {
+        INSTANCE_ID = 'i-0ab5bb334fefbaad8'  
+        AWS_REGION = 'us-east-1'       
+    }
+
+     triggers {
+        cron('0 22 * * *')
+    }
+
+    stages {
+        stage('Scale Down EC2') {
+            steps {
+                echo "stopping EC2 ${INSTANCE_ID}"
+                sh "aws ec2 stop-instances --instance-ids ${INSTANCE_ID} --region ${AWS_REGION}"
+            }
+        }
+    }
+}

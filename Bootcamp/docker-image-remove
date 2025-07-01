@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    triggers {
+        cron('0 1 * * *')
+    }
+
+    stages {
+        stage('Clean Docker Images') {
+            steps {
+                echo "Deleting unused Docker images..."
+                sh "docker image prune -af"
+            }
+        }
+    }
+}
