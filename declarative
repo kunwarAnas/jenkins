@@ -5,19 +5,19 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+        stage('display buildNumber...') {
+            steps{
+                sh "echo ${currentBuild.buildNumber} - Build started"
+            }
+        }
+        stage('display env object...') {
+            steps{
+                sh "echo ${env}"
+            }
+        }
         stage('Build') {
             steps {
                 sh 'echo "Building the project..."'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'echo "Running tests..."'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'echo "Deploying the project..."'
             }
         }
     }
