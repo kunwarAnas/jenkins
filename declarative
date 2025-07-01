@@ -1,21 +1,24 @@
 pipeline {
     agent any
+
     stages {
-        stage('display buildNumber...') {
+        stage('Display Build Number') {
             steps {
-                echo "Build Number: ${currentBuild.buildNumber}"
-                sh "echo \"${currentBuild.buildNumber} - Build started\""
+                echo "Build Number: ${env.BUILD_NUMBER}"
+                sh "echo ${env.BUILD_NUMBER} - Build started"
             }
         }
-        stage('display env object...') {
+
+        stage('Display Env Variables') {
             steps {
                 echo "Env BUILD_ID: ${env.BUILD_ID}"
-                sh echo env.BUILD_ID
+                sh "echo ${env.BUILD_ID} - Build ID"
             }
         }
+
         stage('Build') {
             steps {
-                sh 'echo "Building the project...."'
+                sh 'echo "Building the project..."'
             }
         }
     }
