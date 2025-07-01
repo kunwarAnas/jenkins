@@ -1,9 +1,9 @@
 /* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
-    options {
-        skipStagesAfterUnstable()
-    }
+    // options {
+    //     skipStagesAfterUnstable()
+    // }
     stages {
         stage('display buildNumber...') {
             steps{
@@ -12,7 +12,7 @@ pipeline {
         }
         stage('display env object...') {
             steps{
-                sh "echo ${env}"
+                sh "echo ${env.BUILD_ID} - Build ID"
             }
         }
         stage('Build') {
