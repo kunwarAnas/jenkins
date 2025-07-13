@@ -1,0 +1,21 @@
+/* groovylint-disable-next-line CompileStatic */
+pipeline {
+    agent any
+    stages {
+        stage('build') {
+            steps {
+                eche 'Building...'
+            }
+        }
+    }
+    stages {
+        stage('test') {
+            echo 'Testing...'
+        }
+    }
+    stages('deploy') {
+        step {
+            echo 'Deploying...'
+        }
+    }
+}
