@@ -1,5 +1,8 @@
 /* groovylint-disable DuplicateStringLiteral */
 /* groovylint-disable-next-line CompileStatic */
+
+def gv
+
 pipeline {
     agent any
     // ENV AVAILABLE FOR ALL STAGES
@@ -16,11 +19,19 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: 'Execute tests..')
     }
     stages {
+        stage('init') {
+            steps {
+                script {
+                    // Load the shared library script
+                    gv = load 'script.groovy'
+                }
+            }
+        }
         stage('build') {
             steps {
-                eche 'Building...'
-                echo " PRINTING VAR -> ${MYVAR}"
-                echo "Building branch: ${params.BRANCH_NAME}"
+                script {
+                    gv.build()
+                }
             }
         }
 
@@ -31,20 +42,17 @@ pipeline {
                 }
             }
             steps {
-                echo "Testing enabled: ${params.executeTests}"
-                echo 'Testing...'
+                script {
+                    gv.test()
+                }
             }
         }
 
         stage('deploy') {
             steps {
-                // USING CREDENTIALS & CREDENTIALS BINDING PLUGIN
-                withCredentials([
-                usernamePassword(credential: 'server-credentials' , userVariable: USER , passwordVariable: PASSWORD)
-                ]) {
-                    echo "Deploying with user: ${USER} and password: ${PASSWORD}"
+                script {
+                    gv.deploy()
                 }
-                echo "Deploying ${params.VERSION}..."
             }
         }
     }
