@@ -40,7 +40,7 @@ pipeline {
             steps {
                 // USING CREDENTIALS & CREDENTIALS BINDING PLUGIN
                 withCredentials([
-                usernamePassword(credential: 'server-credentials' , userVariable: USER , passwordVariable: PASSWORD)
+                    usernamePassword(credentialsId: 'server-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')
                 ]) {
                     echo "Deploying with user: ${USER} and password: ${PASSWORD}"
                 }
