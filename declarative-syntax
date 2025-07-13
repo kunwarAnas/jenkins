@@ -1,21 +1,50 @@
+/* groovylint-disable DuplicateStringLiteral */
 /* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
+    // ENV AVAILABLE FOR ALL STAGES
+    environment {
+        MYVAR = 'XYZ'
+        // Using credentials plugin, in parameters pass credential ID.
+        SERVER_CREDENTIALS = credentials(
+            'server-credentials'
+        )
+    }
+    parameters {
+        string(name : 'BRANCH_NAME', defaultValue: '', description : 'ENTER BRANCH NAME')
+        choice(name: 'VERSION', choices: ['1.0', '2.0', '3.0'], description: 'Select a version')
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Execute tests..')
+    }
     stages {
         stage('build') {
             steps {
                 eche 'Building...'
+                echo " PRINTING VAR -> ${MYVAR}"
             }
         }
-    }
-    stages {
+
         stage('test') {
-            echo 'Testing...'
+            when {
+                expression {
+                    params.executeTests == true
+                }
+            }
+            steps {
+                echo "Testing enabled: ${params.executeTests}"
+                echo 'Testing...'
+            }
         }
-    }
-    stages('deploy') {
-        step {
-            echo 'Deploying...'
+
+        stage('deploy') {
+            steps {
+                // USING CREDENTIALS & CREDENTIALS BINDING PLUGIN
+                withCredentials([
+                usernamePassword(credential: 'server-credentials' , userVariable: USER , passwordVariable: PASSWORD)
+                ]) {
+                    echo "Deploying with user: ${USER} and password: ${PASSWORD}"
+                }
+                echo "Deploying ${params.VERSION}..."
+            }
         }
     }
 }
